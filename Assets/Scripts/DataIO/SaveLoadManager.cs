@@ -2,23 +2,15 @@
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
-public class SaveLoadData: MonoBehaviour
+public class SaveLoadManager: MonoBehaviour
 {
-
-    int currentScore = 0;
-    string currentName = "Asd";
-    float currentTimePlayed = 5.0f;
 
     void Start()
     {
-        SaveFile();
-        LoadFile();
 
-        PlayerPrefs.SetFloat("Current Score", 10);
-        PlayerPrefs.GetFloat("Current Score");
     }
 
-    public void SaveFile()
+    public static void SaveFile(GameData data)
     {
         string destination = Application.persistentDataPath + "/save.dat";
         FileStream file;
@@ -29,15 +21,16 @@ public class SaveLoadData: MonoBehaviour
         else { 
             file = File.Create(destination);
         }
-        GameData data = new GameData(currentScore, currentName, currentTimePlayed);
 
         //Serialization
         BinaryFormatter bf = new BinaryFormatter();
         bf.Serialize(file, data);
         file.Close();
+
+        Debug.Log("Successfully saved the file");
     }
 
-    public void LoadFile()
+    public static GameData LoadFile()
     {
         string destination = Application.persistentDataPath + "/save.dat";
         FileStream file;
@@ -49,20 +42,14 @@ public class SaveLoadData: MonoBehaviour
         else
         {
             Debug.LogError("File not found");
-            return;
+            return null;
         }
 
         BinaryFormatter bf = new BinaryFormatter();
         GameData data = (GameData)bf.Deserialize(file);
         file.Close();
 
-        currentScore = data.score;
-        currentName = data.name;
-        currentTimePlayed = data.timePlayed;
-
-        Debug.Log(data.name);
-        Debug.Log(data.score);
-        Debug.Log(data.timePlayed);
+        return data;
     }
 
 }

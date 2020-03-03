@@ -9,6 +9,9 @@ public class SettingsManager : MonoBehaviour
     public GameObject MainMain;
     public GameObject SettingsMenu;
 
+    public Image backgroundImage;
+
+    private Color backgroundColor = Color.red;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +24,13 @@ public class SettingsManager : MonoBehaviour
 
     }
 
+    public void onApplyButtonClicked()
+    {
+        backgroundImage.color = backgroundColor;
+        GameData gameData = new GameData(backgroundColor);
+        SaveLoadManager.SaveFile(gameData);
+    }
+
     public void onBackButonClicked()
     {
         Debug.Log("You have pressed the button");
@@ -31,7 +41,15 @@ public class SettingsManager : MonoBehaviour
     public void onDropDownChanged(Dropdown change)
     {
         Debug.Log("New Value : " + change.value);
-        Debug.Log("New Value : " + change.name);
-
+        if (change.value == 0)
+        {//Change the background to red
+            backgroundColor = Color.red;
+        } else if (change.value == 1)
+        {  // change to green
+            backgroundColor = Color.green;
+        } else
+        { // chgange to blueColo
+            backgroundColor = Color.blue;
+        }
     }
 }
